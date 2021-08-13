@@ -2,13 +2,14 @@ package jaegergin
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 )
 
 func StartServerSpanMiddleware(c *gin.Context) {
-	spanName := fmt.Sprintf("%s %s", c.Request.Method, c.Request.URL.Path)
+	spanName := fmt.Sprintf("%s %s", c.Request.Method, c.FullPath())
 
 	sCtx, _ := opentracing.GlobalTracer().Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
 	span, ctx := opentracing.StartSpanFromContext(c, spanName, ext.RPCServerOption(sCtx))
